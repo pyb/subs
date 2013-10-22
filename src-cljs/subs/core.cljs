@@ -1,49 +1,17 @@
-(ns subs
- (:require [goog.dom :as dom]
-           [goog.Timer :as Timer]
-           [goog.events :as events]))
-;            [clojure.browser.event :as event]
-;            [clojure.browser.dom :as dom]))
+(ns subs.core
+  (:require [subs.draw :as draw]
+            [goog.dom :as dom]
+            [goog.Timer :as Timer]
+            [goog.events :as events]))
 
-
-(declare context)
-(declare canvas)
 (declare add-tile)
-
-;; (defn draw-rect [x y]
-;;   (.beginPath context)
-;;   (set! (.-fillStyle context) "#888")
-;;   (.fillRect context x y 50 50))
-
-(defn clear-canvas []
-  (set! (.-width canvas) (.-width canvas)))
-
-(defn draw-wall [color x y]
-  (.beginPath context)
-  (set! (.-fillStyle context) color)
-  (.moveTo context (* x 10) (* y 10))
-  (.lineTo context (+ (* x 10) 10) (* y 10))
-  (.lineTo context (+ (* x 10) 10) (+ (* y 10) 10))
-  (.lineTo context (* x 10) (+ (* y 10) 10))
-  (.closePath context)
-  (.fill context))
 
 (def pos (atom [5 5]))
 
-(defn draw-hero [x y]
-  (.beginPath context)
-  (set! (.-fillStyle context) "green")
-  (.moveTo context (+ (* x 10) (/ 10 2)) (* y 10))
-  (.lineTo context (- (+ (* x 10) 10) (/ 10 2)) (* y 10))
-  (.lineTo context (+ (* x 10) 10) (+ (* y 10) 10))
-  (.lineTo context (* x 10) (+ (* y 10) 10))
-  (.closePath context)
-  (.fill context))
-
 (def draw-fns
- {:hard-wall (partial draw-wall "blue")
-  :soft-wall (partial draw-wall "black")
-  :explosion (partial draw-wall "red")})
+ {:hard-wall (partial draw/draw-wall "blue")
+  :soft-wall (partial draw/draw-wall "black")
+  :explosion (partial draw/draw-wall "red")})
 
 (def walls
   (list {:x 4 :y 6 :direction :up :length 3 :type :hard-wall}
@@ -96,9 +64,9 @@
 ;; frame-count unused
 (defn game-loop [frame-count]
   (let [tiles (add-walls '() walls)]
-    (clear-canvas)
+    (draw/clear-canvas)
     (render tiles)
-    (apply draw-hero @pos)
+    (apply draw/draw-hero @pos)
     ;; (draw-rect (+ 10 frame-count) 10)
     ;; (when (> 1 frame-count) (js/lololo))
 
@@ -118,20 +86,17 @@
                  (+ y dy)])))
 
 (defn main []
-  (def canvas  (.getElementById js/document "canvas"))
-  (def context (.getContext subs/canvas "2d"))
-
-  (set! (.-width canvas) 1000)
-  (set! (.-height canvas) 600)
-
+  (let [canvas  (.getElementById js/document "canvas")
+        context (.getContext canvas "2d")]
+    (.log js/console "canvas is" canvas)
+    (.log js/console "context is" context)
+    (draw/init context canvas))
+  
   (let [timer (goog.Timer. 100)]
     (do (. timer (start))
         (events/listen timer goog.Timer/TICK move-hero)))
 
-  (let []
-    (.log js/console "canvas is" canvas)
-    (.log js/console "context is" context)
-    (game-loop 0)))
+  (game-loop 0))
 
 (def pressed-key (atom nil))
 
