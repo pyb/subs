@@ -46,13 +46,21 @@ function Player(position) {
 Player.prototype.draw = function() {
   if(this.isAlive){
     return this.aliveSprite.draw();
-  }else{
+  }
+  else
+  {
     return this.deadSprite.draw();
   }
 };
 
 Player.prototype.update = function(options) {
-  if(options.keys.length){
+  if(options.otherPos)
+    {
+	var newPosition = this.position;
+	newPosition.value = options.otherPos.value;
+        this.position = newPosition;
+    }
+  else if(options.keys.length){
     for(var i = 0; i < options.keys.length; i++){
       // var newPosition = new Vector(this.position.x, this.position.y);
       var newPosition = this.position;
