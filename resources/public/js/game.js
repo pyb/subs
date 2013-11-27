@@ -41,21 +41,21 @@ function receive(e, flags) {
 		height = message.board[1];
 		board.tiles = message.board[2];
 	    }
-	if (message.player)
+	if (message.move)
 	    {
 		if (!pn)
 		{
-		    pn = message.player[0];
-		    playerPos = new Vector(message.player[1], message.player[2]);
-		    serverPlayerPos = new Vector(message.player[1], message.player[2]);
+		    pn = message.move[0];
+		    playerPos = new Vector(message.move[1], message.move[2]);
+		    serverPlayerPos = new Vector(message.move[1], message.move[2]);
 		}
-		if (pn == message.player[0])
+		if (pn == message.move[0])
 		{
-		    serverPlayerPos = new Vector(message.player[1], message.player[2]);
+		    serverPlayerPos = new Vector(message.move[1], message.move[2]);
 		}
 		else
 		{
-		    otherPos  = new Vector(message.player[1], message.player[2]);
+		    otherPos  = new Vector(message.move[1], message.move[2]);
 		}
 		if (board.tiles)
 		    ready = true;
