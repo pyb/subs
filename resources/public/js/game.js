@@ -19,27 +19,35 @@ var TILESIZE = 40,
     ready = false;
 
 function connected ()
-{}
+{
+    console.log ("connected");
+}
 
 function disconnected ()
-{}
+{
+    console.log ("disconnected");
+}
 
 function onerror (err, description)
-{ throw err; }
+{ throw "connection error"; }
 
 function receive(e, flags) {
+    console.log ("receive");
     if (e.data) {
 //      var currentTime = new Date().getTime();
 //      this.updateSpeed = currentTime - this.lastUpdate;
 //      this.lastUpdate = currentTime;
 
 	var message = JSON.parse(e.data);
+	
+	console.log (message);
 
-	if (message.board)
+	if (message.board_dump)
 	    {
-		width  = message.board[0];
-		height = message.board[1];
-		board.tiles = message.board[2];
+		width  = message.board_dump[0];
+		height = message.board_dump[1];
+		board = new Board(width, height);
+		board.tiles = message.board_dump[2];
 	    }
 	if (message.move)
 	    {
@@ -80,7 +88,7 @@ function setup() {
   canvas.width = 800;
   canvas.height = 600;
 
-  conn = new WebSocket("ws://"+window.location.hostname+":9000");
+  conn = new WebSocket("ws://"+window.location.hostname+":8081");
   if (conn) {
       conn.onopen = connected;
       conn.onclose = disconnected;
@@ -97,15 +105,18 @@ function setup2() {
     if (! ready) 
     {
 	setTimeout(setup2, 50);
-    } 
-
-    board = new Board(width, height);
-    camera.setup();
-
-    // Create a new Player
-    // var playerPos = new Vector(board.w, board.h).mul(0.5);
-    currentPlayer = playersCollection.newPlayer('pyb', playerPos);
-    otherPlayer   = playersCollection.newPlayer('foe', otherPos);
+    }
+    else {
+	board = new Board(width, height);
+	camera.setup();
+	
+	// Create a new Player
+	// var playerPos = new Vector(board.w, board.h).mul(0.5);
+	currentPlayer = playersCollection.newPlayer('pyb', playerPos);
+	otherPlayer   = playersCollection.newPlayer('foe', otherPos);
+	
+	main();
+    }
 }
 
 // does the screen drawing
@@ -144,8 +155,7 @@ function update() {
 window.onload = function herewego() {
   canvas = document.getElementById('canvas');
   context = canvas.getContext('2d');
-  setup();
-  main();
+  setup(); // Includes main()
 };
 
 window.addEventListener('keydown', function (event) {
