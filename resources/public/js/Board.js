@@ -1,7 +1,8 @@
 function Board(w, h) {
   this.w = w;
   this.h = h;
-  this.tiles = false;
+  this.tiles = [];
+  this.tiles_desc;
 }
 
 Board.prototype.generateTiles = function() {
@@ -29,6 +30,20 @@ Board.prototype.generateTiles = function() {
           this.tiles[x][y].items.push(newItem);
         }
       }
+    }
+  }
+  return this.tiles;
+};
+
+Board.prototype.generateTiles = function() {
+  // build up an array of arrays that hold a hash
+  for(var x = 0; x < this.w; x++){
+    this.tiles[x]= [];
+    for(var y = 0; y < this.h; y++){
+
+      var type = this.tiles_desc[(y * this.w) + x];
+
+      this.tiles[x][y] = new Tile(type, new Vector(x, y, 1));
     }
   }
   return this.tiles;

@@ -12,11 +12,11 @@ var TILESIZE = 40,
     board,
     conn,
     width, height,
-    pn = false,
+    pn,
     playerPos = new Vector(0,0), // fairly useless var (not updated !)
     serverPlayerPos = new Vector(0,0), // where the server says we are
     otherPos  = new Vector(0,0),
-    ready = false;
+    ready;
 
 function connected ()
 {
@@ -47,7 +47,10 @@ function receive(e, flags) {
 		width  = message.board_dump[0];
 		height = message.board_dump[1];
 		board = new Board(width, height);
-		board.tiles = message.board_dump[2];
+		board.tiles_desc = message.board_dump[2];
+		board.generateTiles();
+		if (pn)
+		    ready = true;
 	    }
 	if (message.move)
 	    {
@@ -65,7 +68,7 @@ function receive(e, flags) {
 		{
 		    otherPos  = new Vector(message.move[1], message.move[2]);
 		}
-		if (board.tiles)
+		if (board)
 		    ready = true;
 	    }
     }
@@ -107,7 +110,6 @@ function setup2() {
 	setTimeout(setup2, 50);
     }
     else {
-	board = new Board(width, height);
 	camera.setup();
 	
 	// Create a new Player
@@ -147,7 +149,9 @@ function update() {
   board.update();
   minesCollection.update();
   playersCollection.update({keys: PRESSED_KEYS,
-			   otherPos: otherPos});
+			    pn: pn,
+			    send: conn.send.bind(conn),
+			    otherPos: otherPos});
   PRESSED_KEYS = []; // clear all pressed keys for this frame
 }
 

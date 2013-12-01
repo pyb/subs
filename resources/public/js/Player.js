@@ -80,6 +80,18 @@ Player.prototype.update = function(options) {
         this.position = newPosition;
       }
 
+      if (options.send)
+	{
+	    var message = JSON.stringify({move: [options.pn, newPosition.x, newPosition.y]}); 
+	    console.log (message);
+	    console.log (options.send);
+	    options.send (message);
+	}
+	else
+	{
+	    console.log ("beurk");
+	}
+
       if(options.keys[i] == 'leavemine' && this.isAlive){
         if(this.availableMines > 0){
           minesCollection.newMine(this.position, this);
