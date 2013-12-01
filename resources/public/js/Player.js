@@ -60,53 +60,59 @@ Player.prototype.update = function(options) {
 	newPosition.value = options.otherPos.value;
         this.position = newPosition;
     }
-  else if(options.keys.length){
-    for(var i = 0; i < options.keys.length; i++){
-      // var newPosition = new Vector(this.position.x, this.position.y);
-      var newPosition = this.position;
-
-      var left = new Vector(-1, 0);
-      var right = new Vector(1, 0);
-      var up = new Vector(0, -1);
-      var down = new Vector(0, 1);
-
-      if(options.keys[i] == 'left')  newPosition = newPosition.add(left);
-      if(options.keys[i] == 'right') newPosition = newPosition.add(right);
-      if(options.keys[i] == 'up')    newPosition = newPosition.add(up);
-      if(options.keys[i] == 'down')  newPosition = newPosition.add(down);
-
-
-      if(this.canMoveTo(newPosition.x, newPosition.y) || !this.isAlive){
-        this.position = newPosition;
+  else {
+      if(options.position)
+      {
+	  this.position = options.position;
+	  var tileItems = board.tiles[this.position.x][this.position.y].items;
+	  if(tileItems.length){
+              for(var ti = 0; ti < tileItems.length; ti++){
+		  this.addItem(tileItems[ti]);
+              }
+              board.tiles[this.position.x][this.position.y].items = [];
+	  }
       }
+      if(options.keys.length){
+	  for(var i = 0; i < options.keys.length; i++){
+	      // var newPosition = new Vector(this.position.x, this.position.y);
+	      var newPosition = this.position;
 
-      if (options.send)
-	{
-	    var message = JSON.stringify({move: [options.pn, newPosition.x, newPosition.y]}); 
-	    console.log (message);
-	    console.log (options.send);
-	    options.send (message);
-	}
-	else
-	{
-	    console.log ("beurk");
-	}
+	      var left = new Vector(-1, 0);
+	      var right = new Vector(1, 0);
+	      var up = new Vector(0, -1);
+	      var down = new Vector(0, 1);
 
-      if(options.keys[i] == 'leavemine' && this.isAlive){
-        if(this.availableMines > 0){
-          minesCollection.newMine(this.position, this);
-          this.availableMines--;
-        }
+	      if(options.keys[i] == 'left')  newPosition = newPosition.add(left);
+	      if(options.keys[i] == 'right') newPosition = newPosition.add(right);
+	      if(options.keys[i] == 'up')    newPosition = newPosition.add(up);
+	      if(options.keys[i] == 'down')  newPosition = newPosition.add(down);
+
+
+	      if(this.canMoveTo(newPosition.x, newPosition.y) || !this.isAlive){
+		  //        this.position = newPosition; // PYB
+	      }
+
+	      if (options.send)
+	      {
+		  var message = JSON.stringify({move: [options.pn, newPosition.x, newPosition.y]}); 
+		  console.log (message);
+		  console.log (options.send);
+		  options.send (message);
+	      }
+	      else
+	      {
+		  console.log ("beurk");
+	      }
+
+	      if(options.keys[i] == 'leavemine' && this.isAlive){
+		  if(this.availableMines > 0){
+		      minesCollection.newMine(this.position, this);
+		      this.availableMines--;
+		  }
+	      }
+
+	  }
       }
-
-      var tileItems = board.tiles[this.position.x][this.position.y].items;
-      if(tileItems.length){
-        for(var ti = 0; ti < tileItems.length; ti++){
-          this.addItem(tileItems[ti]);
-        }
-        board.tiles[this.position.x][this.position.y].items = [];
-      }
-    }
   }
 
   // player is caught in the explosion

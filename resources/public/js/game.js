@@ -114,7 +114,7 @@ function setup2() {
 	
 	// Create a new Player
 	// var playerPos = new Vector(board.w, board.h).mul(0.5);
-	currentPlayer = playersCollection.newPlayer('pyb', playerPos);
+	currentPlayer = playersCollection.newPlayer('pyb', serverPlayerPos);
 	otherPlayer   = playersCollection.newPlayer('foe', otherPos);
 	
 	main();
@@ -151,7 +151,8 @@ function update() {
   playersCollection.update({keys: PRESSED_KEYS,
 			    pn: pn,
 			    send: conn.send.bind(conn),
-			    otherPos: otherPos});
+			    otherPos: otherPos,
+			    position: serverPlayerPos});
   PRESSED_KEYS = []; // clear all pressed keys for this frame
 }
 

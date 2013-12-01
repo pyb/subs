@@ -19,6 +19,6 @@ PlayersCollection.prototype.draw = function() {
 };
 
 PlayersCollection.prototype.update = function(options) {
-  this.players['pyb'].update({keys: options.keys, send:options.send, pn:options.pn});
+  this.players['pyb'].update({keys: options.keys, send:options.send, pn:options.pn, position:options.position});
   this.players['foe'].update({otherPos: options.otherPos});
 };
