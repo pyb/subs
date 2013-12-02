@@ -52,14 +52,22 @@ function receive(e, flags) {
 		if (pn)
 		    ready = true;
 	    }
+	if (message.pn)
+	{
+	    if (!pn)
+	    {
+		pn = message.pn[0];
+		console.log ("I am player", pn);
+	    }
+	}
 	if (message.move)
 	    {
-		if (!pn)
-		{
-		    pn = message.move[0];
-		    playerPos = new Vector(message.move[2], message.move[3]);
-		    serverPlayerPos = new Vector(message.move[2], message.move[3]);
-		}
+		// if (!pn)
+		// {
+		//     pn = message.move[0];
+		//     playerPos = new Vector(message.move[2], message.move[3]);
+		//     serverPlayerPos = new Vector(message.move[2], message.move[3]);
+		// }
 		if (pn == message.move[0])
 		{
 		    serverPlayerPos = new Vector(message.move[2], message.move[3]);

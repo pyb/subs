@@ -94,7 +94,7 @@ Player.prototype.update = function(options) {
 
 	      if (options.send)
 	      {
-		  var message = JSON.stringify({move: [options.pn, newPosition.x, newPosition.y]}); 
+		  var message = JSON.stringify({move: [options.pn, true, newPosition.x, newPosition.y]}); 
 		  console.log (message);
 		  console.log (options.send);
 		  options.send (message);
