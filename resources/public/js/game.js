@@ -57,16 +57,16 @@ function receive(e, flags) {
 		if (!pn)
 		{
 		    pn = message.move[0];
-		    playerPos = new Vector(message.move[1], message.move[2]);
-		    serverPlayerPos = new Vector(message.move[1], message.move[2]);
+		    playerPos = new Vector(message.move[2], message.move[3]);
+		    serverPlayerPos = new Vector(message.move[2], message.move[3]);
 		}
 		if (pn == message.move[0])
 		{
-		    serverPlayerPos = new Vector(message.move[1], message.move[2]);
+		    serverPlayerPos = new Vector(message.move[2], message.move[3]);
 		}
 		else
 		{
-		    otherPos  = new Vector(message.move[1], message.move[2]);
+		    otherPos  = new Vector(message.move[2], message.move[3]);
 		}
 		if (board)
 		    ready = true;
