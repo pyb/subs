@@ -62,12 +62,10 @@ function receive(e, flags) {
 	}
 	if (message.move)
 	    {
-		// if (!pn)
-		// {
-		//     pn = message.move[0];
-		//     playerPos = new Vector(message.move[2], message.move[3]);
-		//     serverPlayerPos = new Vector(message.move[2], message.move[3]);
-		// }
+		if (!pn)
+		    {
+			console.log ("Bug : pn not available");
+		    }
 		if (pn == message.move[0])
 		{
 		    serverPlayerPos = new Vector(message.move[2], message.move[3]);
